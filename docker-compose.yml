@@ -3,15 +3,18 @@ version: '3.8'
 services:
   postgres:
     image: postgres:13
-    container_name: short-url-postgres
+    container_name: quigo-postgres
     restart: always
     ports:
       - "5432:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: short_url
+      POSTGRES_DB: quigodb
     networks:
       - default
     volumes:
       - database_postgres:/var/lib/postgresql/data
+
+volumes:
+  database_postgres:
