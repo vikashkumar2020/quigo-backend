@@ -5,6 +5,7 @@ import (
 	"github.com/vikashkumar2020/quigo-backend/app/common/register"
 	"github.com/vikashkumar2020/quigo-backend/config"
 	"github.com/vikashkumar2020/quigo-backend/utils"
+	pgdatabase "github.com/vikashkumar2020/quigo-backend/infra/postgres/database"
 )
 
 
@@ -27,16 +28,16 @@ func main() {
 	utils.LogInfo(serverConfig.Port)
 
 	// initialize database
-	// database := pgdatabase.GetDBInstance();
-	// database.NewDBConnection(dbConfig);
-	// utils.LogInfo("db connection established")
+	database := pgdatabase.GetDBInstance();
+	database.NewDBConnection(dbConfig);
+	utils.LogInfo("db connection established")
 
 	router := gin.Default()
 	register.Routes(router, serverConfig)
-	
-	// if err := router.Run(":" + serverConfig.Port); err != nil {
-	// 	utils.LogFatal(err)
-	// }
+	router.Run(":" + serverConfig.Port)
+	if err := router.Run(":" + serverConfig.Port); err != nil {
+		utils.LogFatal(err)
+	}
 	utils.LogInfo("server started")
 
 	
