@@ -6,7 +6,4 @@ import (
 
 func RegisterAuthRoutes(router *gin.RouterGroup) {
 
-	router.GET("/:shortURL", )
-    router.POST("/create", )
-
 }
