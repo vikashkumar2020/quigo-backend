@@ -1,4 +1,4 @@
-package utils
+package config
 
 import (
 	"go.uber.org/zap"

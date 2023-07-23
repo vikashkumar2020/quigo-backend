@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	utils "github.com/vikashkumar2020/quigo-backend/utils"
 )
 
 type ServerConfig struct {
@@ -20,6 +19,18 @@ type DBConfig struct {
 	Username string
 	Password string
 	Dbname   string
+}
+
+type JWTConfig struct {
+	AccessTokenPrivateKey  string               
+}
+
+type EmailConfig struct {
+	EmailFrom string
+	EmailHost string
+	EmailPort string
+	EmailUser string
+	EmailPass string
 }
 
 // NewServerConfig returns a pointer to a new ServerConfig struct initialized with values from environment variables.
@@ -43,11 +54,26 @@ func NewDBConfig() *DBConfig {
 	}
 }
 
+func NewJWTConfig() *JWTConfig {
+	return &JWTConfig{
+		AccessTokenPrivateKey: os.Getenv("TOKEN_SECRET"),
+	}
+}
+
+func NewEmailConfig() *EmailConfig {
+	return &EmailConfig{
+		EmailFrom: os.Getenv("EMAIL_FROM"),
+		EmailHost: os.Getenv("SMTP_HOST"),
+		EmailPort: os.Getenv("SMTP_PORT"),
+		EmailUser: os.Getenv("SMTP_USER"),
+		EmailPass: os.Getenv("SMTP_PASS"),
+	}
+}
 // LoadEnv loads environment variables from the .env file in the current directory.
 func LoadEnv() {
 
 	loadEnvError := godotenv.Load(".env")
 	if loadEnvError != nil {
-		utils.LogFatal(loadEnvError)
+		LogFatal(loadEnvError)
 	}
 }

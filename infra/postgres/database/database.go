@@ -1,9 +1,10 @@
 package pgdatabase
 
 import (
+	"log"
+
 	config "github.com/vikashkumar2020/quigo-backend/config"
 	db "github.com/vikashkumar2020/quigo-backend/infra/postgres"
-	"github.com/vikashkumar2020/quigo-backend/utils"
 
 	"gorm.io/gorm"
 
@@ -23,7 +24,7 @@ func (database *Database) NewDBConnection(config *config.DBConfig) {
 	// change this to postgres connection
 	db, err := gorm.Open(postgresConnection, &gorm.Config{})
 	if err != nil {
-		utils.LogFatal(err)
+		log.Fatal(err)
 	}
 	database.DB = db
 }

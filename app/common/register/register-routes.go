@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/vikashkumar2020/quigo-backend/config"
 	routes "github.com/vikashkumar2020/quigo-backend/app/routes"
+    middleware "github.com/vikashkumar2020/quigo-backend/app/common/middlewares"
 )
 
 // health ckeck api
@@ -33,13 +34,20 @@ func CORSMiddleware() gin.HandlerFunc {
 
 func Routes(router *gin.Engine, serverConfig *config.ServerConfig) {
 	router.Use(CORSMiddleware())
-	webV1RouterGroup := router.Group("/" + serverConfig.ServerApiPrefixV1)
-	RegiterWebRoutes(webV1RouterGroup)
+	webV1AuthRouterGroup := router.Group("/" + serverConfig.ServerApiPrefixV1)
+    webV1UserRouterGroup := router.Group("/" + serverConfig.ServerApiPrefixV1+ "/profile")
+    middleware.RegisterUserMiddleware(webV1UserRouterGroup)
+	RegiterWebAuthRoutes(webV1AuthRouterGroup)
+    RegiterWebUserRoutes(webV1UserRouterGroup)
 	router.GET("/health", healhCheck)
 
 }
 
 // rest api routes 
-func RegiterWebRoutes(router *gin.RouterGroup) {
+func RegiterWebAuthRoutes(router *gin.RouterGroup) {
     routes.RegisterAuthRoutes(router)
+}
+
+func RegiterWebUserRoutes(router *gin.RouterGroup) {
+    routes.RegisterUserRoutes(router)
 }
