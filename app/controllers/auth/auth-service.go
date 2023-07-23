@@ -79,7 +79,7 @@ func Register() gin.HandlerFunc {
 			Subject:   "Your account verification code",
 		}
 
-		utils.SendEmail(&newUser, &emailData)
+		utils.SendEmail(&newUser, &emailData, "verificationCode.html")
 
 		message := "We sent an email with a verification code to " + newUser.Email
 		ctx.JSON(http.StatusCreated, gin.H{"status": "success", "message": message})
@@ -158,10 +158,93 @@ func Login() gin.HandlerFunc {
 // ForgotPassword User as rider or driver
 
 func ForgotPassword() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
+	return func(ctx *gin.Context) {
+		var payload *models.ForgotPasswordInput
+
+		if err := ctx.ShouldBindJSON(&payload); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": err.Error()})
+			return
+		}
+
+		message := "You will receive a reset email if user with that email exist"
+
+		var user models.User
+		db := pgdatabase.GetDBInstance().GetDB()
+		result := db.First(&user, "email = ?", strings.ToLower(payload.Email))
+		if result.Error != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": "Invalid email or Password"})
+			return
+		}
+
+		if !user.Verified {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"status": "error", "message": "Account not verified"})
+			return
+		}
+
+		// Generate Verification Code
+		resetToken := randstr.String(20)
+
+		passwordResetToken := utils.Encode(resetToken)
+		user.PasswordResetToken = passwordResetToken
+		user.PasswordResetAt = time.Now().Add(time.Minute * 15)
+		db.Save(&user)
+
+		var firstName = user.Name
+
+		if strings.Contains(firstName, " ") {
+			firstName = strings.Split(firstName, " ")[0]
+		}
+
+		// ? Send Email
+		emailData := utils.EmailData{
+			URL:       "http://localhost:8080/api/v1" + "/resetpassword/" + resetToken,
+			FirstName: firstName,
+			Subject:   "Your password reset token (valid for 10min)",
+		}
+
+		utils.SendEmail(&user, &emailData, "resetPassword.html")
+
+		ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": message})
+	}
+}
+
+// ResetPassword User as rider or driver
+
+func ResetPassword() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var payload *models.ResetPasswordInput
+		resetToken := ctx.Params.ByName("resetToken")
+
+		if err := ctx.ShouldBindJSON(&payload); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": err.Error()})
+			return
+		}
+
+		if payload.Password != payload.PasswordConfirm {
+			ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": "Passwords do not match"})
+			return
+		}
+
+		hashedPassword, _ := utils.HashPassword(payload.Password)
+
+		passwordResetToken := utils.Encode(resetToken)
+
+		var updatedUser models.User
+		db := pgdatabase.GetDBInstance().GetDB()
+		result := db.First(&updatedUser, "password_reset_token = ? AND password_reset_at > ?", passwordResetToken, time.Now())
+		if result.Error != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": "The reset token is invalid or has expired"})
+			return
+		}
+
+		updatedUser.Password = hashedPassword
+		updatedUser.PasswordResetToken = ""
+		db.Save(&updatedUser)
+
+		ctx.SetCookie("token", "", -1, "/", "localhost", false, true)
+
+		ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": "Password data updated successfully"})
+
 	}
 }
 
