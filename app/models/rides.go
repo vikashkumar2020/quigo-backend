@@ -13,28 +13,27 @@ type Rides struct {
 	From             string    `gorm:"not null"`
 	To               string    `gorm:"not null"`
 	Price            string
-	Seats            string
 	Departure        time.Time
 	Arrival          time.Time
 	RideStatus       string `gorm:"not null"`
 	PaymentStatus    string `gorm:"not null"`
 	VerificationCode string
-	Role             string    `gorm:"type:varchar(255);not null"`
-	Address          string    `gorm:"not null"`
-	PrivateKey       string    `gorm:"not null"`
+	RiderAddress     string
+	RiderPrivateKey  string
+	DriverAddress    string
+	DriverPrivateKey string
 	CreatedAt        time.Time `gorm:"not null"`
 	UpdatedAt        time.Time `gorm:"not null"`
 }
 
 type RideRequest struct {
-	RiderEmail string `json:"email"`
-	From       string `json:"from"`
-	To         string `json:"to"`
-	FromLng    string `json:"from_lng"`
-	FromLat    string `json:"from_lat"`
-	ToLng      string `json:"to_lng"`
-	ToLat      string `json:"to_lat"`
-	Amnt       string `json:"amnt"`
+	From    string `json:"from"`
+	To      string `json:"to"`
+	FromLng string `json:"from_lng"`
+	FromLat string `json:"from_lat"`
+	ToLng   string `json:"to_lng"`
+	ToLat   string `json:"to_lat"`
+	Amount  string `json:"amount"`
 }
 
 type RiderRideDetails struct {

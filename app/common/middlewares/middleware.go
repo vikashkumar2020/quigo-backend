@@ -52,16 +52,41 @@ func DeserializeUser() gin.HandlerFunc {
 	}
 }
 
+func DriverCheck() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		role := ctx.GetString("role")
+		if role != "driver" {
+			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{"status": "fail", "message": "You are not a driver and not authorized to access this resource"})
+			return
+		}
+		ctx.Next()
+	}
+}
+
+func RiderCheck() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		role := ctx.GetString("role")
+		if role != "rider" {
+			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{"status": "fail", "message": "You are not a rider and not authorized to access this resource"})
+			return
+		}
+		ctx.Next()
+	}
+}
+
 func RegisterUserMiddleware(router *gin.RouterGroup) {
 	router.Use(DeserializeUser())
 }
 
 func RegisterDriverMiddleware(router *gin.RouterGroup) {
 	router.Use(DeserializeUser())
+	router.Use(DriverCheck())
+
 }
 
 func RegisterRiderMiddleware(router *gin.RouterGroup) {
 	router.Use(DeserializeUser())
+	router.Use(RiderCheck())
 }
 
 
