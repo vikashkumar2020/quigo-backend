@@ -38,31 +38,29 @@ type RideRequest struct {
 }
 
 type RiderRideDetails struct {
-	DriverName  string `json:"driver_name"`
-	DriverNumer string `json:"driver_number"`
-	From        string `json:"from"`
-	To          string `json:"to"`
-	Price       string `json:"price"`
-	RideStatus  string `json:"ride_status"`
-	PaymentStatus     string `json:"payment_status"`
+	DriverName    string `json:"driver_name"`
+	DriverNumer   string `json:"driver_number"`
+	From          string `json:"from"`
+	To            string `json:"to"`
+	Price         string `json:"price"`
+	RideStatus    string `json:"ride_status"`
+	PaymentStatus string `json:"payment_status"`
 }
 
-type RideDetail struct{
-	RideStatus  string `json:"ride_status"`
-	Price 	 string `json:"price"`
-	From 	  string `json:"from"`
-	To 		  string `json:"to"`
-	PaymentStatus     string `json:"payment_status"`
+type RideDetail struct {
+	RideStatus    string `json:"ride_status"`
+	Price         string `json:"price"`
+	From          string `json:"from"`
+	To            string `json:"to"`
+	PaymentStatus string `json:"payment_status"`
 }
 
 type DriverRideDetails struct {
-	RiderName string `json:"rider_name"`
-	RiderNumer string `json:"rider_number"`
-	From      string `json:"from"`
-	To        string `json:"to"`
-	Price     string `json:"price"`
-	RideStatus  string `json:"ride_status"`
-	PaymentStatus     string `json:"payment_status"`
+	RiderName     string `json:"rider_name"`
+	RiderNumer    string `json:"rider_number"`
+	From          string `json:"from"`
+	To            string `json:"to"`
+	Price         string `json:"price"`
+	RideStatus    string `json:"ride_status"`
+	PaymentStatus string `json:"payment_status"`
 }
-
-
