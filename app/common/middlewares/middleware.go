@@ -47,6 +47,7 @@ func DeserializeUser() gin.HandlerFunc {
 		}
 
 		ctx.Set("currentUser", user)
+		ctx.Set("role", user.Role)
 		ctx.Next()
 	}
 }
@@ -54,6 +55,15 @@ func DeserializeUser() gin.HandlerFunc {
 func RegisterUserMiddleware(router *gin.RouterGroup) {
 	router.Use(DeserializeUser())
 }
+
+func RegisterDriverMiddleware(router *gin.RouterGroup) {
+	router.Use(DeserializeUser())
+}
+
+func RegisterRiderMiddleware(router *gin.RouterGroup) {
+	router.Use(DeserializeUser())
+}
+
 
 
 

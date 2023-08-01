@@ -36,9 +36,15 @@ func Routes(router *gin.Engine, serverConfig *config.ServerConfig) {
 	router.Use(CORSMiddleware())
 	webV1AuthRouterGroup := router.Group("/" + serverConfig.ServerApiPrefixV1)
     webV1UserRouterGroup := router.Group("/" + serverConfig.ServerApiPrefixV1+ "/profile")
+    webV1DriverRouterGroup := router.Group("/" + serverConfig.ServerApiPrefixV1+ "/driver")
+    webV1RiderRouterGroup := router.Group("/" + serverConfig.ServerApiPrefixV1+ "/rider")
     middleware.RegisterUserMiddleware(webV1UserRouterGroup)
+    middleware.RegisterDriverMiddleware(webV1DriverRouterGroup)
+    middleware.RegisterRiderMiddleware(webV1RiderRouterGroup)
 	RegiterWebAuthRoutes(webV1AuthRouterGroup)
     RegiterWebUserRoutes(webV1UserRouterGroup)
+    RegiterWebDriverRoutes(webV1DriverRouterGroup)
+    RegiterWebRiderRoutes(webV1RiderRouterGroup)
 	router.GET("/health", healhCheck)
 
 }
@@ -51,3 +57,13 @@ func RegiterWebAuthRoutes(router *gin.RouterGroup) {
 func RegiterWebUserRoutes(router *gin.RouterGroup) {
     routes.RegisterUserRoutes(router)
 }
+
+func RegiterWebDriverRoutes(router *gin.RouterGroup) {
+    routes.RegisterDriverRoutes(router)
+}
+
+func RegiterWebRiderRoutes(router *gin.RouterGroup) {   
+    routes.RegisterRiderRoutes(router)
+}
+
+
