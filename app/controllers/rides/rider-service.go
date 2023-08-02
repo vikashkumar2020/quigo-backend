@@ -142,20 +142,25 @@ func Payment() gin.HandlerFunc {
 
 		ethClient := eth.GetEthClient();
 
-		riderConn, riderAuth := services.GetConnection(ethClient,riderWallet.PrivateKey)
-		driverConn, driverAuth := services.GetConnection(ethClient,driverWallet.PrivateKey)
-
-		// Deduct amount from rider wallet
-
 		price, err := strconv.ParseInt(ride.Price, 10, 64)
 		if err != nil {
 			// handle the error if necessary
 			return
 		}
 
+		riderConn, riderAuth := services.GetConnection(ethClient,riderWallet.PrivateKey)
 		riderConn.Withdrawl(riderAuth,big.NewInt(price))
+		riderWallet.Balance = riderWallet.Balance - price	
+		driverConn, driverAuth := services.GetConnection(ethClient,driverWallet.PrivateKey)
 		driverConn.Deposite(driverAuth,big.NewInt(price))
-	
+		driverWallet.Balance = driverWallet.Balance + price
+
+		db.Save(&riderWallet)
+		db.Save(&driverWallet)
+
+		ride.PaymentStatus = "paid"
+
+		db.Save(&ride)
 		c.JSON(200, gin.H{
 			"message": "payment Successfull",
 			"ride_details": ride,
