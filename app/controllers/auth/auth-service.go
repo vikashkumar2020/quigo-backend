@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/thanhpk/randstr"
 	"github.com/vikashkumar2020/quigo-backend/app/models"
+	services "github.com/vikashkumar2020/quigo-backend/app/services"
 	"github.com/vikashkumar2020/quigo-backend/config"
 	pgdatabase "github.com/vikashkumar2020/quigo-backend/infra/postgres/database"
 	utils "github.com/vikashkumar2020/quigo-backend/utils"
@@ -104,8 +105,12 @@ func VerifyEmail() gin.HandlerFunc {
 			return
 		}
 
+		address, privateKey := services.GetUnusedPrivateKey(db, updatedUser.Email)
+
 		updatedUser.VerificationCode = ""
 		updatedUser.Verified = true
+		updatedUser.Address = address
+		updatedUser.PrivateKey = privateKey
 		db.Save(&updatedUser)
 
 		ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": "Email verified successfully"})

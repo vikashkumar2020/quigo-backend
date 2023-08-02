@@ -1,10 +1,14 @@
 package rides
 
 import (
+	"math/big"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/vikashkumar2020/quigo-backend/app/models"
+	"github.com/vikashkumar2020/quigo-backend/app/services"
+	"github.com/vikashkumar2020/quigo-backend/infra/eth"
 	pgdatabase "github.com/vikashkumar2020/quigo-backend/infra/postgres/database"
 )
 
@@ -95,8 +99,70 @@ func GetRiderRideDetails() gin.HandlerFunc {
 
 func Payment() gin.HandlerFunc {
 	return func(c *gin.Context) {
+
+		id := c.Param("id")
+
+		db := pgdatabase.GetDBInstance().GetDB()
+
+		var ride models.Rides
+
+		result := db.Where("id = ?", id).First(&ride)
+
+		if result.Error != nil {
+			c.JSON(400, gin.H{"status": "error", "message": "Ride not found"})
+			return
+		}
+
+		if ride.PaymentStatus == "paid" {
+			c.JSON(200, gin.H{"status": "paid", "message": "Payment already done"})
+			return
+		}
+
+		// Get rider wallet details
+
+		var riderWallet models.Wallet
+		result = db.Where("email = ?", ride.RiderEmail).First(&riderWallet)
+
+		if result.Error != nil {
+			c.JSON(400, gin.H{"status": "error", "message": "Rider wallet not found"})
+			return
+		}
+
+		// Get driver wallet details
+
+		var driverWallet models.Wallet
+		result = db.Where("email = ?", ride.DriverEmail).First(&driverWallet)
+
+		if result.Error != nil {
+			c.JSON(400, gin.H{"status": "error", "message": "Driver wallet not found"})
+			return
+		}
+
+		// eth client
+
+		ethClient := eth.GetEthClient();
+
+		riderConn, riderAuth := services.GetConnection(ethClient,riderWallet.PrivateKey)
+		driverConn, driverAuth := services.GetConnection(ethClient,driverWallet.PrivateKey)
+
+		// Deduct amount from rider wallet
+
+		price, err := strconv.ParseInt(ride.Price, 10, 64)
+		if err != nil {
+			// handle the error if necessary
+			return
+		}
+
+		riderConn.Withdrawl(riderAuth,big.NewInt(price))
+		driverConn.Deposite(driverAuth,big.NewInt(price))
+	
 		c.JSON(200, gin.H{
-			"message": "payment",
+			"message": "payment Successfull",
+			"ride_details": ride,
 		})
 	}
+}
+
+func Atoi(s string) {
+	panic("unimplemented")
 }

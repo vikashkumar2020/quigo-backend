@@ -49,7 +49,7 @@ func getAccountAuth(client *ethclient.Client, privateKeyAddress string) *bind.Tr
 	return auth
 }
 
-func GetConnection(client *ethclient.Client, privateKeyAddress string) *api.Api{ 
+func GetConnection(client *ethclient.Client, privateKeyAddress string) (*api.Api,*bind.TransactOpts){ 
 	auth := getAccountAuth(client, privateKeyAddress)
 	
 	address, tx, instance, err := api.DeployApi(auth, client)
@@ -69,5 +69,5 @@ func GetConnection(client *ethclient.Client, privateKeyAddress string) *api.Api{
 		panic(err)
 	}
 
-	return conn
+	return conn, auth
 }
