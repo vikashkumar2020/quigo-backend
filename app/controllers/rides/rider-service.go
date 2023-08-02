@@ -23,8 +23,8 @@ func CreateRide() gin.HandlerFunc{
 
 		ride := models.Rides{
 			RiderEmail: user.Email,
-			From: payload.From,
-			To: payload.To,
+			Origin: payload.Origin,
+			Destination: payload.Destination,
 			Price: payload.Amount,
 			RideStatus: "requested",
 			PaymentStatus: "pending",
@@ -65,7 +65,7 @@ func GetRiderRideDetails() gin.HandlerFunc{
 		}
 
 		if ride.RideStatus == "requested" {
-			c.JSON(200, gin.H{"status": "pending", "message": "Ride is still pending"})
+			c.JSON(200, gin.H{"status": "requested", "message": "Ride is still pending"})
 			return
 		}
 
@@ -79,8 +79,8 @@ func GetRiderRideDetails() gin.HandlerFunc{
 
 
 		riderRideDetails := models.RiderRideDetails{}
-		riderRideDetails.From = ride.From
-		riderRideDetails.To = ride.To
+		riderRideDetails.Origin = ride.Origin
+		riderRideDetails.Destination = ride.Destination
 		riderRideDetails.Price = ride.Price
 		riderRideDetails.RideStatus = ride.RideStatus
 		riderRideDetails.PaymentStatus = ride.PaymentStatus

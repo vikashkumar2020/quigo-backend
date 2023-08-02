@@ -17,8 +17,8 @@ func RegisterDriverRoutes(router *gin.RouterGroup) {
 	// driver ride routes
 	router.GET("/rides", rides.GetRides()) // get all availble rides
 	router.GET("/rides/:id", rides.GetDriverRideDetails()) // get ride details
-	router.GET("/rides/:id/accept", rides.AcceptRide()) // accept ride
-	router.GET("/rides/:id/start", rides.Start()) // start ride	
+	router.PUT("/rides/:id/accept", rides.AcceptRide()) // accept ride
+	router.PUT("/rides/:id/start", rides.Start()) // start ride	
 	router.GET("/rides/:id/complete", rides.CompleteRide()) // complete ride
 	router.GET("/rides/:id/cancel", rides.CancelRide()) 	// cancel ride
 }
