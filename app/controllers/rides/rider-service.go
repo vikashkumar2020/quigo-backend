@@ -8,7 +8,7 @@ import (
 	pgdatabase "github.com/vikashkumar2020/quigo-backend/infra/postgres/database"
 )
 
-func CreateRide() gin.HandlerFunc{
+func CreateRide() gin.HandlerFunc {
 	// create ride
 	return func(ctx *gin.Context) {
 
@@ -22,16 +22,16 @@ func CreateRide() gin.HandlerFunc{
 		user := ctx.MustGet("currentUser").(models.User)
 
 		ride := models.Rides{
-			RiderEmail: user.Email,
-			Origin: payload.Origin,
-			Destination: payload.Destination,
-			Price: payload.Amount,
-			RideStatus: "requested",
-			PaymentStatus: "pending",
-			RiderAddress: user.Address,
+			RiderEmail:      user.Email,
+			Origin:          payload.Origin,
+			Destination:     payload.Destination,
+			Price:           payload.Amount,
+			RideStatus:      "requested",
+			PaymentStatus:   "pending",
+			RiderAddress:    user.Address,
 			RiderPrivateKey: user.PrivateKey,
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
+			CreatedAt:       time.Now(),
+			UpdatedAt:       time.Now(),
 		}
 
 		db := pgdatabase.GetDBInstance().GetDB()
@@ -43,13 +43,13 @@ func CreateRide() gin.HandlerFunc{
 		}
 
 		ctx.JSON(200, gin.H{
-			"message": "create ride",
+			"message":      "create ride",
 			"ride_details": ride,
 		})
 	}
 }
 
-func GetRiderRideDetails() gin.HandlerFunc{
+func GetRiderRideDetails() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		id := c.Param("id")
@@ -77,7 +77,6 @@ func GetRiderRideDetails() gin.HandlerFunc{
 			return
 		}
 
-
 		riderRideDetails := models.RiderRideDetails{}
 		riderRideDetails.Origin = ride.Origin
 		riderRideDetails.Destination = ride.Destination
@@ -88,13 +87,13 @@ func GetRiderRideDetails() gin.HandlerFunc{
 		riderRideDetails.DriverNumer = driverDetails.Phone
 
 		c.JSON(200, gin.H{
-			"message": "ride details",
+			"message":      "ride details",
 			"ride_details": riderRideDetails,
 		})
 	}
 }
 
-func Payment() gin.HandlerFunc{
+func Payment() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "payment",

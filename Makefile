@@ -12,3 +12,8 @@ create-migration-postgres:
 migration-up-postgres:
 	@echo "Up the migrations"
 	@go run infra/goose/migrations.go up
+
+sol:
+	solc --optimize --abi ./contracts/MySmartContract.sol -o build
+	solc --optimize --bin ./contracts/MySmartContract.sol -o build
+	abigen --abi=./build/MySmartContract.abi --bin=./build/MySmartContract.bin --pkg=api --out=./api/MySmartContract.go

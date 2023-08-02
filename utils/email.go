@@ -44,7 +44,7 @@ func ParseTemplateDir(dir string) (*template.Template, error) {
 }
 
 func SendEmail(user *models.User, data *EmailData, temp string) {
-	config:= config.NewEmailConfig()
+	config := config.NewEmailConfig()
 
 	// Sender data.
 	from := config.EmailFrom
@@ -71,7 +71,7 @@ func SendEmail(user *models.User, data *EmailData, temp string) {
 	m.SetBody("text/html", body.String())
 	m.AddAlternative("text/plain", html2text.HTML2Text(body.String()))
 	port, err := strconv.Atoi(smtpPort)
-	if err !=  nil{
+	if err != nil {
 		log.Println(err)
 	}
 	d := gomail.NewDialer(smtpHost, port, smtpUser, smtpPass)
@@ -83,4 +83,3 @@ func SendEmail(user *models.User, data *EmailData, temp string) {
 	}
 
 }
-

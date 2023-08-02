@@ -8,8 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/vikashkumar2020/quigo-backend/app/models"
 	"github.com/vikashkumar2020/quigo-backend/config"
-	"github.com/vikashkumar2020/quigo-backend/utils"
 	pgdatabase "github.com/vikashkumar2020/quigo-backend/infra/postgres/database"
+	"github.com/vikashkumar2020/quigo-backend/utils"
 )
 
 func DeserializeUser() gin.HandlerFunc {
@@ -88,7 +88,3 @@ func RegisterRiderMiddleware(router *gin.RouterGroup) {
 	router.Use(DeserializeUser())
 	router.Use(RiderCheck())
 }
-
-
-
-

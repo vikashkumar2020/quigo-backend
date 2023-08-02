@@ -8,7 +8,7 @@ import (
 	pgdatabase "github.com/vikashkumar2020/quigo-backend/infra/postgres/database"
 )
 
-func GetRides() gin.HandlerFunc{
+func GetRides() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		var availableRides []models.RideDetail
@@ -24,12 +24,12 @@ func GetRides() gin.HandlerFunc{
 
 		c.JSON(200, gin.H{
 			"message": "all the pending rides",
-			"rides": availableRides,
+			"rides":   availableRides,
 		})
 	}
 }
 
-func GetDriverRideDetails() gin.HandlerFunc{
+func GetDriverRideDetails() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		id := c.Param("id")
@@ -58,23 +58,23 @@ func GetDriverRideDetails() gin.HandlerFunc{
 		}
 
 		driverRideDeatils := models.DriverRideDetails{
-			RiderName: riderDetails.Name,
-			RiderNumer: riderDetails .Phone,
-			Origin: ride.Origin,
-			Destination: ride.Destination,
-			Price: ride.Price,
-			RideStatus: ride.RideStatus,
+			RiderName:     riderDetails.Name,
+			RiderNumer:    riderDetails.Phone,
+			Origin:        ride.Origin,
+			Destination:   ride.Destination,
+			Price:         ride.Price,
+			RideStatus:    ride.RideStatus,
 			PaymentStatus: ride.PaymentStatus,
 		}
 
 		c.JSON(200, gin.H{
-			"message": "get ride details",
+			"message":      "get ride details",
 			"ride_details": driverRideDeatils,
 		})
 	}
 }
 
-func AcceptRide() gin.HandlerFunc{
+func AcceptRide() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		id := c.Param("id")
@@ -91,6 +91,11 @@ func AcceptRide() gin.HandlerFunc{
 			return
 		}
 
+		if ride.RideStatus != "requested" {
+			c.JSON(400, gin.H{"status": "error", "message": "Cannot accept this ride"})
+			return
+		}
+
 		ride.RideStatus = "accepted"
 		ride.UpdatedAt = time.Now()
 		ride.DriverEmail = user.Email
@@ -99,13 +104,13 @@ func AcceptRide() gin.HandlerFunc{
 
 		db.Save(&ride)
 		c.JSON(200, gin.H{
-			"message": "accepted the ride",
+			"message":      "accepted the ride",
 			"ride_details": ride,
 		})
 	}
 }
 
-func Start() gin.HandlerFunc{
+func Start() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		id := c.Param("id")
@@ -122,6 +127,11 @@ func Start() gin.HandlerFunc{
 			return
 		}
 
+		if ride.RideStatus != "accepted" {
+			c.JSON(400, gin.H{"status": "error", "message": "Cannot start this ride"})
+			return
+		}
+
 		ride.RideStatus = "started"
 		ride.UpdatedAt = time.Now()
 		ride.Departure = time.Now()
@@ -129,14 +139,13 @@ func Start() gin.HandlerFunc{
 		db.Save(&ride)
 
 		c.JSON(200, gin.H{
-			"message": "started ride",
+			"message":      "started ride",
 			"ride_details": ride,
 		})
 	}
 }
 
-func CompleteRide() gin.HandlerFunc{
-
+func CompleteRide() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 		id := c.Param("id")
@@ -148,7 +157,6 @@ func CompleteRide() gin.HandlerFunc{
 		result := db.Where("id = ?", id).First(&ride)
 
 		if result.Error != nil {
-
 			c.JSON(400, gin.H{"status": "error", "message": "Ride not found"})
 			return
 		}
@@ -170,13 +178,13 @@ func CompleteRide() gin.HandlerFunc{
 		db.Save(&ride)
 
 		c.JSON(200, gin.H{
-			"message": "start ride",
+			"message":      "start ride",
 			"ride_details": ride,
 		})
 	}
 }
 
-func CancelRide() gin.HandlerFunc{
+func CancelRide() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		id := c.Param("id")
@@ -186,7 +194,6 @@ func CancelRide() gin.HandlerFunc{
 		var ride models.Rides
 
 		result := db.Where("id = ?", id).First(&ride)
-
 
 		if result.Error != nil {
 
@@ -207,9 +214,8 @@ func CancelRide() gin.HandlerFunc{
 		ride.RideStatus = "cancelled"
 		ride.UpdatedAt = time.Now()
 
-
 		c.JSON(200, gin.H{
-			"message": "cancel ride",
+			"message":      "cancel ride",
 			"ride_details": ride,
 		})
 	}

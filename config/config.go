@@ -22,7 +22,7 @@ type DBConfig struct {
 }
 
 type JWTConfig struct {
-	AccessTokenPrivateKey  string               
+	AccessTokenPrivateKey string
 }
 
 type EmailConfig struct {
@@ -69,6 +69,7 @@ func NewEmailConfig() *EmailConfig {
 		EmailPass: os.Getenv("SMTP_PASS"),
 	}
 }
+
 // LoadEnv loads environment variables from the .env file in the current directory.
 func LoadEnv() {
 

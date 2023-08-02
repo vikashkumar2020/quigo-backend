@@ -27,7 +27,6 @@ func GenerateToken(ttl time.Duration, payload interface{}, secretJWTKey string) 
 	return tokenString, nil
 }
 
-
 func ValidateToken(token string, signedJWTKey string) (interface{}, error) {
 	tok, err := jwt.Parse(token, func(jwtToken *jwt.Token) (interface{}, error) {
 		if _, ok := jwtToken.Method.(*jwt.SigningMethodHMAC); !ok {

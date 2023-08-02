@@ -6,7 +6,7 @@ import (
 )
 
 func RegisterUserRoutes(router *gin.RouterGroup) {
-	router.GET("/me",user.GetMe())
+	router.GET("/me", user.GetMe())
 	// router.GET("/rides",user.GetRides())
 	// router.GET("/wallet",user.GetWallet())
 	// router.GET("/rides/:id",user.GetRide())

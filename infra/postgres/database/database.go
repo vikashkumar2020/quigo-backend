@@ -42,5 +42,3 @@ func GetDBInstance() *Database {
 func (database *Database) GetDB() *gorm.DB {
 	return database.DB
 }
-
-
