@@ -1,7 +1,7 @@
 pragma solidity ^0.8.0;
 
 contract MySmartContract {
-    uint256 balance = 0;
+    uint256 balance = 100;
     address public admin;
 
     constructor() {
