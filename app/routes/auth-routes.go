@@ -11,5 +11,5 @@ func RegisterAuthRoutes(router *gin.RouterGroup) {
 	router.POST("/forgot-password", auth.ForgotPassword())
 	router.PATCH("/resetpassword/:resetToken", auth.ResetPassword())
 	router.GET("/logout", auth.Logout())
-	router.GET("/verifyemail/:verificationCode", auth.VerifyEmail())
+	router.GET("/verifysuccess/:verificationCode", auth.VerifyEmail())
 }
