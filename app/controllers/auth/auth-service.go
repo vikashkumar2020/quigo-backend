@@ -75,7 +75,7 @@ func Register() gin.HandlerFunc {
 		}
 
 		emailData := utils.EmailData{
-			URL:       "http://localhost:8080/api/v1" + "/verifyemail/" + code,
+			URL:       "http://localhost:3000/auth" + "/verifysuccess/" + code,
 			FirstName: firstName,
 			Subject:   "Your account verification code",
 		}
@@ -113,7 +113,7 @@ func VerifyEmail() gin.HandlerFunc {
 		updatedUser.PrivateKey = privateKey
 		db.Save(&updatedUser)
 
-		ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": "Email verified successfully"})
+		ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": "Email verified successfully","data": updatedUser.Email})
 	}
 }
 
@@ -202,7 +202,7 @@ func ForgotPassword() gin.HandlerFunc {
 
 		// ? Send Email
 		emailData := utils.EmailData{
-			URL:       "http://localhost:8080/api/v1" + "/resetpassword/" + resetToken,
+			URL:       "http://localhost:3000/auth" + "/resetpassword/" + resetToken,
 			FirstName: firstName,
 			Subject:   "Your password reset token (valid for 10min)",
 		}
