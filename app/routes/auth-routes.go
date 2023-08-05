@@ -8,7 +8,7 @@ import (
 func RegisterAuthRoutes(router *gin.RouterGroup) {
 	router.POST("/login", auth.Login())
 	router.POST("/register", auth.Register())
-	router.POST("/forgot-password", auth.ForgotPassword())
+	router.POST("/forgotpassword", auth.ForgotPassword())
 	router.PATCH("/resetpassword/:resetToken", auth.ResetPassword())
 	router.GET("/logout", auth.Logout())
 	router.GET("/verifysuccess/:verificationCode", auth.VerifyEmail())

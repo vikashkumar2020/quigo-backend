@@ -169,13 +169,13 @@ func ForgotPassword() gin.HandlerFunc {
 			return
 		}
 
-		message := "You will receive a reset email if user with that email exist"
+		message := "A reset link has been sent to your registered email. Please use it to reset your password."
 
 		var user models.User
 		db := pgdatabase.GetDBInstance().GetDB()
 		result := db.First(&user, "email = ?", strings.ToLower(payload.Email))
 		if result.Error != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": "Invalid email or Password"})
+			ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": "Invalid email"})
 			return
 		}
 
