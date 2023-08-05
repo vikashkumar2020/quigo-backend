@@ -107,7 +107,6 @@ func VerifyEmail() gin.HandlerFunc {
 
 		address, privateKey := services.GetUnusedPrivateKey(db, updatedUser.Email)
 
-		updatedUser.VerificationCode = ""
 		updatedUser.Verified = true
 		updatedUser.Address = address
 		updatedUser.PrivateKey = privateKey
