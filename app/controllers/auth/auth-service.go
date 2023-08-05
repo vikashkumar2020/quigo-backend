@@ -16,7 +16,6 @@ import (
 )
 
 // Register User as rider or driver
-
 func Register() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var payload *models.SignUpInput
@@ -87,6 +86,7 @@ func Register() gin.HandlerFunc {
 	}
 }
 
+// VerifyEmail User as rider or driver
 func VerifyEmail() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		code := ctx.Params.ByName("verificationCode")
@@ -161,7 +161,6 @@ func Login() gin.HandlerFunc {
 }
 
 // ForgotPassword User as rider or driver
-
 func ForgotPassword() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var payload *models.ForgotPasswordInput
@@ -214,7 +213,6 @@ func ForgotPassword() gin.HandlerFunc {
 }
 
 // ResetPassword User as rider or driver
-
 func ResetPassword() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var payload *models.ResetPasswordInput
@@ -253,6 +251,7 @@ func ResetPassword() gin.HandlerFunc {
 	}
 }
 
+// Logout User as rider or driver
 func Logout() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		ctx.SetCookie("token", "", -1, "/", "localhost", false, true)
