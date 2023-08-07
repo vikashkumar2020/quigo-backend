@@ -82,6 +82,7 @@ func Register() gin.HandlerFunc {
 		utils.SendEmail(&newUser, &emailData, "verificationCode.html")
 
 		message := "We sent an email with a verification code to " + newUser.Email
+		ctx.SetCookie("email",newUser.Email, 60*24*30, "/", "localhost", false, true)
 		ctx.JSON(http.StatusCreated, gin.H{"status": "success", "message": message})
 	}
 }
@@ -111,7 +112,7 @@ func VerifyEmail() gin.HandlerFunc {
 		updatedUser.Address = address
 		updatedUser.PrivateKey = privateKey
 		db.Save(&updatedUser)
-
+		ctx.SetCookie("email","", 60*24*30, "/", "localhost", false, true)
 		ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": "Email verified successfully","data": updatedUser.Email})
 	}
 }
