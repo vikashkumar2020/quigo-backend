@@ -154,9 +154,19 @@ func Login() gin.HandlerFunc {
 			return
 		}
 
+		userResponse := &models.UserResponse{
+			ID:        user.ID,
+			Name:      user.Name,
+			Email:     user.Email,
+			Phone:     user.Phone,
+			Role:      user.Role,
+			CreatedAt: user.CreatedAt,
+			UpdatedAt: user.UpdatedAt,
+		}
+
 		ctx.SetCookie("token", token, 60*24*30, "/", "localhost", false, true)
 
-		ctx.JSON(http.StatusOK, gin.H{"status": "success", "token": token})
+		ctx.JSON(http.StatusOK, gin.H{"status": "success", "data": userResponse})
 	}
 }
 
