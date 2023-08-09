@@ -18,7 +18,6 @@ contract MySmartContract {
     }
 
     function Withdrawl(uint256 _amt) public{
-        require(msg.sender == admin);
         balance = balance - _amt;
     }
 

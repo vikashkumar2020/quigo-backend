@@ -1,10 +1,12 @@
 package rides
 
 import (
+	"log"
 	"math/big"
 	"strconv"
 	"time"
 
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/gin-gonic/gin"
 	"github.com/vikashkumar2020/quigo-backend/app/models"
 	"github.com/vikashkumar2020/quigo-backend/app/services"
@@ -148,12 +150,37 @@ func Payment() gin.HandlerFunc {
 			return
 		}
 
-		riderConn, riderAuth := services.GetConnection(ethClient,riderWallet.PrivateKey)
-		riderConn.Withdrawl(riderAuth,big.NewInt(price))
-		riderWallet.Balance = riderWallet.Balance - price	
-		driverConn, driverAuth := services.GetConnection(ethClient,driverWallet.PrivateKey)
-		driverConn.Deposite(driverAuth,big.NewInt(price))
-		driverWallet.Balance = driverWallet.Balance + price
+		Conn := services.GetConnection(ethClient,"28eee86e1836f578030dc7b77d5a90bbaa460f95074c7864a0948cc3a778af79")
+
+		driverAuth := services.GetAccountAuth(ethClient,driverWallet.PrivateKey)	
+		res, err := Conn.Deposite(driverAuth,big.NewInt(price))
+		if err != nil {
+			// handle error
+			log.Println(err)
+		}
+		log.Println(res)
+
+		reply, err := Conn.Balance(&bind.CallOpts{})
+		if err != nil {
+			// handle error
+			log.Println(err)
+		}
+		log.Println(reply.Int64())
+		driverWallet.Balance = reply.Int64()
+
+		riderAuth := services.GetAccountAuth(ethClient,riderWallet.PrivateKey)
+		res, err = Conn.Withdrawl(riderAuth,big.NewInt(price))
+		if err != nil {
+			// handle error
+			log.Println(err)
+		}
+		log.Println(res)
+		reply, err = Conn.Balance(&bind.CallOpts{})
+		if err != nil {
+			// handle error
+			log.Println(err)
+		}
+		riderWallet.Balance = reply.Int64()
 
 		db.Save(&riderWallet)
 		db.Save(&driverWallet)

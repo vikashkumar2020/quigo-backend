@@ -13,7 +13,7 @@ import (
 	"github.com/vikashkumar2020/quigo-backend/api"
 )
 
-func getAccountAuth(client *ethclient.Client, privateKeyAddress string) *bind.TransactOpts {
+func GetAccountAuth(client *ethclient.Client, privateKeyAddress string) *bind.TransactOpts {
 
 	privateKey, err := crypto.HexToECDSA(privateKeyAddress)
 	if err != nil {
@@ -49,8 +49,8 @@ func getAccountAuth(client *ethclient.Client, privateKeyAddress string) *bind.Tr
 	return auth
 }
 
-func GetConnection(client *ethclient.Client, privateKeyAddress string) (*api.Api,*bind.TransactOpts){ 
-	auth := getAccountAuth(client, privateKeyAddress)
+func GetConnection(client *ethclient.Client, privateKeyAddress string) (*api.Api){ 
+	auth := GetAccountAuth(client, privateKeyAddress)
 	
 	address, tx, instance, err := api.DeployApi(auth, client)
 	if err != nil {
@@ -69,5 +69,5 @@ func GetConnection(client *ethclient.Client, privateKeyAddress string) (*api.Api
 		panic(err)
 	}
 
-	return conn, auth
+	return conn
 }
