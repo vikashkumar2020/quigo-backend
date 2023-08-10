@@ -164,7 +164,7 @@ func Login() gin.HandlerFunc {
 			UpdatedAt: user.UpdatedAt,
 		}
 
-		ctx.SetCookie("token", token, 60*24*30, "/", "localhost", false, true)
+		ctx.SetCookie("token", token, 60*24*60*30*12, "/", "localhost", false, true)
 
 		ctx.JSON(http.StatusOK, gin.H{"status": "success", "data": userResponse})
 	}
