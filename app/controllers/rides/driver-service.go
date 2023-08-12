@@ -64,6 +64,8 @@ func GetDriverRideDetails() gin.HandlerFunc {
 			Destination:   ride.Destination,
 			Price:         ride.Price,
 			RideStatus:    ride.RideStatus,
+			Duration: 	ride.Duration,
+			Distance: 	ride.Distance,
 			PaymentStatus: ride.PaymentStatus,
 		}
 

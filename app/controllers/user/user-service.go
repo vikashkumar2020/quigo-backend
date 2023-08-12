@@ -2,9 +2,11 @@ package user
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/vikashkumar2020/quigo-backend/app/models"
+	pgdatabase "github.com/vikashkumar2020/quigo-backend/infra/postgres/database"
 )
 
 func GetMe() gin.HandlerFunc {
@@ -21,6 +23,18 @@ func GetMe() gin.HandlerFunc {
 			CreatedAt: currentUser.CreatedAt,
 			UpdatedAt: currentUser.UpdatedAt,
 		}
-		ctx.JSON(http.StatusOK, gin.H{"status": "success", "data": gin.H{"user": userResponse}})
+
+		db := pgdatabase.GetDBInstance().GetDB()
+		var balance models.Wallet
+		result := db.Where("email = ?", currentUser.Email).First(&balance)
+
+		if result.Error != nil {
+			ctx.JSON(http.StatusBadGateway, gin.H{"status": "error", "message": result.Error.Error()})
+			return
+		}
+		
+		userResponse.Balance = strconv.FormatInt(balance.Balance, 10)
+	
+		ctx.JSON(http.StatusOK, gin.H{"status": "success", "data": userResponse})
 	}
 }

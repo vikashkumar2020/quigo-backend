@@ -12,6 +12,8 @@ type Rides struct {
 	DriverEmail      string    `gorm:"uniqueIndex"`
 	Origin           string    `gorm:"not null"`
 	Destination      string    `gorm:"not null"`
+	Duration         string    `gorm:"not null"`
+	Distance         string    `gorm:"not null"`
 	Price            string
 	Departure        time.Time
 	Arrival          time.Time
@@ -33,6 +35,8 @@ type RideRequest struct {
 	FromLat     string `json:"from_lat"`
 	ToLng       string `json:"to_lng"`
 	ToLat       string `json:"to_lat"`
+	Duration    string `json:"duration"`
+	Distance    string `json:"distance"`
 	Amount      string `json:"amount"`
 }
 
@@ -41,6 +45,8 @@ type RiderRideDetails struct {
 	DriverNumer   string `json:"driver_number"`
 	Origin        string `json:"origin"`
 	Destination   string `json:"destination"`
+	Duration 	string `json:"duration"`
+	Distance 	string `json:"distance"`
 	Price         string `json:"price"`
 	RideStatus    string `json:"ride_status"`
 	PaymentStatus string `json:"payment_status"`
@@ -52,6 +58,8 @@ type RideDetail struct {
 	Price         string `json:"price"`
 	Origin        string `json:"origin"`
 	Destination   string `json:"destination"`
+	Duration 	string `json:"duration"`
+	Distance 	string `json:"distance"`
 	PaymentStatus string `json:"payment_status"`
 }
 
@@ -62,5 +70,7 @@ type DriverRideDetails struct {
 	Destination   string `json:"destination"`
 	Price         string `json:"price"`
 	RideStatus    string `json:"ride_status"`
+	Duration 	string `json:"duration"`
+	Distance 	string `json:"distance"`
 	PaymentStatus string `json:"payment_status"`
 }

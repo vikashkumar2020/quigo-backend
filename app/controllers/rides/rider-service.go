@@ -32,6 +32,8 @@ func CreateRide() gin.HandlerFunc {
 			Origin:          payload.Origin,
 			Destination:     payload.Destination,
 			Price:           payload.Amount,
+			Duration:        payload.Duration,
+			Distance:        payload.Distance,
 			RideStatus:      "requested",
 			PaymentStatus:   "pending",
 			RiderAddress:    user.Address,
@@ -91,6 +93,8 @@ func GetRiderRideDetails() gin.HandlerFunc {
 		riderRideDetails.PaymentStatus = ride.PaymentStatus
 		riderRideDetails.DriverName = driverDetails.Name
 		riderRideDetails.DriverNumer = driverDetails.Phone
+		riderRideDetails.Duration = ride.Duration
+		riderRideDetails.Distance = ride.Distance
 
 		c.JSON(200, gin.H{
 			"message":      "ride details",
@@ -142,7 +146,7 @@ func Payment() gin.HandlerFunc {
 
 		// eth client
 
-		ethClient := eth.GetEthClient();
+		ethClient := eth.GetEthClient()
 
 		price, err := strconv.ParseInt(ride.Price, 10, 64)
 		if err != nil {
@@ -150,10 +154,10 @@ func Payment() gin.HandlerFunc {
 			return
 		}
 
-		Conn := services.GetConnection(ethClient,"28eee86e1836f578030dc7b77d5a90bbaa460f95074c7864a0948cc3a778af79")
+		Conn := services.GetConnection(ethClient, "28eee86e1836f578030dc7b77d5a90bbaa460f95074c7864a0948cc3a778af79")
 
-		driverAuth := services.GetAccountAuth(ethClient,driverWallet.PrivateKey)	
-		res, err := Conn.Deposite(driverAuth,big.NewInt(price))
+		driverAuth := services.GetAccountAuth(ethClient, driverWallet.PrivateKey)
+		res, err := Conn.Deposite(driverAuth, big.NewInt(price))
 		if err != nil {
 			// handle error
 			log.Println(err)
@@ -168,8 +172,8 @@ func Payment() gin.HandlerFunc {
 		log.Println(reply.Int64())
 		driverWallet.Balance = reply.Int64()
 
-		riderAuth := services.GetAccountAuth(ethClient,riderWallet.PrivateKey)
-		res, err = Conn.Withdrawl(riderAuth,big.NewInt(price))
+		riderAuth := services.GetAccountAuth(ethClient, riderWallet.PrivateKey)
+		res, err = Conn.Withdrawl(riderAuth, big.NewInt(price))
 		if err != nil {
 			// handle error
 			log.Println(err)
@@ -189,7 +193,7 @@ func Payment() gin.HandlerFunc {
 
 		db.Save(&ride)
 		c.JSON(200, gin.H{
-			"message": "payment Successfull",
+			"message":      "payment Successfull",
 			"ride_details": ride,
 		})
 	}

@@ -26,6 +26,7 @@ type UserResponse struct {
 	Email     string    `json:"email,omitempty"`
 	Phone     string    `json:"phone_number,omitempty"`
 	Role      string    `json:"role,omitempty"`
+	Balance   string    `json:"balance,omitempty"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
