@@ -154,7 +154,7 @@ func Payment() gin.HandlerFunc {
 			return
 		}
 
-		Conn := services.GetConnection(ethClient, "28eee86e1836f578030dc7b77d5a90bbaa460f95074c7864a0948cc3a778af79")
+		Conn := services.GetConnection(ethClient,"28eee86e1836f578030dc7b77d5a90bbaa460f95074c7864a0948cc3a778af79")
 
 		driverAuth := services.GetAccountAuth(ethClient, driverWallet.PrivateKey)
 		res, err := Conn.Deposite(driverAuth, big.NewInt(price))
@@ -170,7 +170,7 @@ func Payment() gin.HandlerFunc {
 			log.Println(err)
 		}
 		log.Println(reply.Int64())
-		driverWallet.Balance = reply.Int64()
+		driverWallet.Balance = driverWallet.Balance + price
 
 		riderAuth := services.GetAccountAuth(ethClient, riderWallet.PrivateKey)
 		res, err = Conn.Withdrawl(riderAuth, big.NewInt(price))
@@ -184,7 +184,7 @@ func Payment() gin.HandlerFunc {
 			// handle error
 			log.Println(err)
 		}
-		riderWallet.Balance = reply.Int64()
+		riderWallet.Balance = riderWallet.Balance - price
 
 		db.Save(&riderWallet)
 		db.Save(&driverWallet)
@@ -193,7 +193,7 @@ func Payment() gin.HandlerFunc {
 
 		db.Save(&ride)
 		c.JSON(200, gin.H{
-			"message":      "payment Successfull",
+			"message":"payment Successfull",
 			"ride_details": ride,
 		})
 	}
