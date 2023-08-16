@@ -43,6 +43,17 @@ func CreateRide() gin.HandlerFunc {
 		}
 
 		db := pgdatabase.GetDBInstance().GetDB()
+
+		// check if any previous ride is not completed yet
+
+		var previousRide models.Rides
+		resultprev := db.Where("rider_email = ? AND ride_status != ?", user.Email, "completed").First(&previousRide)
+
+		if resultprev.Error == nil {
+			ctx.JSON(400, gin.H{"status": "error", "message": "Previous ride is not completed yet"})
+			return
+		}
+		
 		result := db.Create(&ride)
 
 		if result.Error != nil {

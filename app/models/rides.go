@@ -7,9 +7,9 @@ import (
 )
 
 type Rides struct {
-	ID               uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();"`
-	RiderEmail       string    `gorm:"uniqueIndex;not null;primary_key"`
-	DriverEmail      string    `gorm:"uniqueIndex"`
+	ID               uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primary_key"`
+	RiderEmail       string    `gorm:"not null"`
+	DriverEmail      string    `gorm:"not null"`
 	Origin           string    `gorm:"not null"`
 	Destination      string    `gorm:"not null"`
 	Duration         string    `gorm:"not null"`
