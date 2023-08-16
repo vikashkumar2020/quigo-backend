@@ -112,7 +112,7 @@ func VerifyEmail() gin.HandlerFunc {
 		updatedUser.Address = address
 		updatedUser.PrivateKey = privateKey
 		db.Save(&updatedUser)
-		ctx.SetCookie("email","", 60*60*24*30, "/", "localhost", false, true)
+		ctx.SetCookie("email","", 30, "/", "localhost", false, true)
 		ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": "Email verified successfully","data": updatedUser.Email})
 	}
 }

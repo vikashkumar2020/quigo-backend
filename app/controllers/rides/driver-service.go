@@ -15,7 +15,7 @@ func GetRides() gin.HandlerFunc {
 		db := pgdatabase.GetDBInstance().GetDB()
 
 		if err := db.Model(&models.Rides{}).
-			Select("id, ride_status, price, origin, destination, payment_status").
+			Select("id, ride_status, price, origin, destination, payment_status, distance, duration").
 			Where("ride_status = ?", "requested").
 			Find(&availableRides).Error; err != nil {
 			c.JSON(500, gin.H{"error": "Failed to retrieve pending rides"})

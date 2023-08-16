@@ -51,7 +51,8 @@ func CreateRide() gin.HandlerFunc {
 		}
 
 		ctx.JSON(200, gin.H{
-			"message":      "create ride",
+			"status":       "success",
+			"message":      "Ride requested successfully",
 			"ride_details": ride,
 		})
 	}
