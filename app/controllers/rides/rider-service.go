@@ -97,6 +97,11 @@ func GetRiderRideDetails() gin.HandlerFunc {
 			return
 		}
 
+		if(time.Now().Unix() - ride.UpdatedAt.Unix() > 300){
+			ride.RideStatus = "rejected"
+			db.Save(&ride)
+		}
+
 		riderRideDetails := models.RiderRideDetails{}
 		riderRideDetails.Origin = ride.Origin
 		riderRideDetails.Destination = ride.Destination
