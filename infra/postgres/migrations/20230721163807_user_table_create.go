@@ -23,10 +23,12 @@ func init() {
 
 func upUserTableCreate(tx *sql.Tx) error {
 	// This code is executed when the migration is applied.
+	// return nil
 	return db.Migrator().CreateTable(&model.User{})
 }
 
 func downUserTableCreate(tx *sql.Tx) error {
 	// This code is executed when the migration is rolled back.
+	// return nil
 	return db.Migrator().DropTable(&model.User{})
 }

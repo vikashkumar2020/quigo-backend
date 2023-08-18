@@ -45,7 +45,7 @@ func GetDriverRideDetails() gin.HandlerFunc {
 			return
 		}
 
-		if ride.RideStatus != "requested" {
+		if ride.RideStatus == "requested" {
 			c.JSON(400, gin.H{"status": "error", "message": "Cannot View details of this ride"})
 			return
 		}

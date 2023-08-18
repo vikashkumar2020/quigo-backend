@@ -85,7 +85,7 @@ func GetRiderRideDetails() gin.HandlerFunc {
 		}
 
 		if ride.RideStatus == "requested" {
-			c.JSON(200, gin.H{"status": "requested", "message": "Ride is still pending"})
+			c.JSON(200, gin.H{"status": "success","rideStatus":ride.RideStatus, "message": "Ride is still pending"})
 			return
 		}
 
@@ -110,6 +110,8 @@ func GetRiderRideDetails() gin.HandlerFunc {
 
 		c.JSON(200, gin.H{
 			"message":      "ride details",
+			"status": "success",
+			"rideStatus":       ride.RideStatus,
 			"ride_details": riderRideDetails,
 		})
 	}
