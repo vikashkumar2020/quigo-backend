@@ -90,18 +90,27 @@ func GetRiderRideDetails() gin.HandlerFunc {
 			db.Save(&ride)
 		}
 
+		pendingRideDetails := models.RiderRideDetails{}
+		pendingRideDetails.Origin = ride.Origin
+		pendingRideDetails.Destination = ride.Destination
+		pendingRideDetails.Price = ride.Price
+		pendingRideDetails.RideStatus = ride.RideStatus
+		pendingRideDetails.PaymentStatus = ride.PaymentStatus
+		pendingRideDetails.Duration = ride.Duration
+		pendingRideDetails.Distance = ride.Distance
+
 		if ride.RideStatus == "requested" {
-			c.JSON(200, gin.H{"status": "success","rideStatus":ride.RideStatus, "message": "Ride is still pending"})
+			c.JSON(200, gin.H{"status": "success","rideStatus":ride.RideStatus, "message": "Ride is still pending","ride_details": pendingRideDetails,})
 			return
 		}
 
 		var driverDetails models.User
 		result = db.Where("email = ?", ride.DriverEmail).First(&driverDetails)
 
-		if result.Error != nil {
-			c.JSON(400, gin.H{"status": "error", "message": "Driver not found"})
-			return
-		}
+		// if result.Error != nil {
+		// 	c.JSON(400, gin.H{"status": "error", "message": "Driver not found"})
+		// 	return
+		// }
 
 		riderRideDetails := models.RiderRideDetails{}
 		riderRideDetails.Origin = ride.Origin
