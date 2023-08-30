@@ -88,8 +88,6 @@ func GetRiderRideDetails() gin.HandlerFunc {
 		if(ride.RideStatus == "requested" && time.Now().Unix() - ride.UpdatedAt.Unix() > 300){
 			ride.RideStatus = "rejected"
 			db.Save(&ride)
-			c.JSON(200, gin.H{"status": "success","rideStatus":ride.RideStatus, "message": "Ride is rejected"})
-			return
 		}
 
 		if ride.RideStatus == "requested" {
