@@ -47,7 +47,8 @@ func CreateRide() gin.HandlerFunc {
 		// check if any previous ride is not completed yet
 
 		var previousRide models.Rides
-		resultprev := db.Where("rider_email = ? AND ride_status != ? OR ride_status != ?", user.Email, "completed","rejected").First(&previousRide)
+		resultprev := db.Where("rider_email = ? AND ride_status NOT IN (?, ?, ?)", user.Email, "completed", "rejected", "cancelled").First(&previousRide)
+
 
 		if resultprev.Error == nil {
 			ctx.JSON(400, gin.H{"status": "error", "message": "Previous ride is not completed yet"})
