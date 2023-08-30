@@ -18,19 +18,30 @@ func healhCheck(c *gin.Context) {
 
 // CORS middleware
 func CORSMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, PATCH")
+    return func(c *gin.Context) {
+        // Set the allowed origins
+        c.Writer.Header().Set("Access-Control-Allow-Origin", "https://quigo-fr-9lb3.vercel.app")
+        
+        // Allow credentials (cookies, authentication headers) to be sent with the request
+        c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+        
+        // Specify the allowed headers in the request
+        c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+        
+        // Specify the allowed HTTP methods
+        c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, PATCH")
 
-		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatus(204)
-			return
-		}
-		c.Next()
-	}
+        // Handle preflight requests (OPTIONS method)
+        if c.Request.Method == "OPTIONS" {
+            c.AbortWithStatus(204)  // Respond with a 204 No Content status
+            return
+        }
+
+        // Continue to the next middleware or the route handler
+        c.Next()
+    }
 }
+
 
 func Routes(router *gin.Engine, serverConfig *config.ServerConfig) {
 	router.Use(CORSMiddleware())

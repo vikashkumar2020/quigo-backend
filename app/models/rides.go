@@ -64,6 +64,7 @@ type RideDetail struct {
 }
 
 type DriverRideDetails struct {
+	ID 		  string `json:"id"`
 	RiderName     string `json:"rider_name"`
 	RiderNumer    string `json:"rider_number"`
 	Origin        string `json:"origin"`

@@ -58,14 +58,15 @@ func GetDriverRideDetails() gin.HandlerFunc {
 		}
 
 		driverRideDeatils := models.DriverRideDetails{
+			ID:            ride.ID.String(),
 			RiderName:     riderDetails.Name,
 			RiderNumer:    riderDetails.Phone,
 			Origin:        ride.Origin,
 			Destination:   ride.Destination,
 			Price:         ride.Price,
 			RideStatus:    ride.RideStatus,
-			Duration: 	ride.Duration,
-			Distance: 	ride.Distance,
+			Duration:      ride.Duration,
+			Distance:      ride.Distance,
 			PaymentStatus: ride.PaymentStatus,
 		}
 

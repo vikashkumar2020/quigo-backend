@@ -124,7 +124,7 @@ func GetRiderRideDetails() gin.HandlerFunc {
 		riderRideDetails.Distance = ride.Distance
 
 		c.JSON(200, gin.H{
-			"message":      "ride details",
+			"message": "ride details",
 			"status": "success",
 			"rideStatus":       ride.RideStatus,
 			"ride_details": riderRideDetails,
