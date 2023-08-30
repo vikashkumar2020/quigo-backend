@@ -47,7 +47,7 @@ func CreateRide() gin.HandlerFunc {
 		// check if any previous ride is not completed yet
 
 		var previousRide models.Rides
-		resultprev := db.Where("rider_email = ? AND ride_status != ?", user.Email, "completed").First(&previousRide)
+		resultprev := db.Where("rider_email = ? AND ride_status != ? OR ride_status != ?", user.Email, "completed","rejected").First(&previousRide)
 
 		if resultprev.Error == nil {
 			ctx.JSON(400, gin.H{"status": "error", "message": "Previous ride is not completed yet"})
@@ -84,6 +84,13 @@ func GetRiderRideDetails() gin.HandlerFunc {
 			return
 		}
 
+		if(ride.RideStatus == "requested" && time.Now().Unix() - ride.UpdatedAt.Unix() > 300){
+			ride.RideStatus = "rejected"
+			db.Save(&ride)
+			c.JSON(200, gin.H{"status": "success","rideStatus":ride.RideStatus, "message": "Ride is rejected"})
+			return
+		}
+
 		if ride.RideStatus == "requested" {
 			c.JSON(200, gin.H{"status": "success","rideStatus":ride.RideStatus, "message": "Ride is still pending"})
 			return
@@ -95,11 +102,6 @@ func GetRiderRideDetails() gin.HandlerFunc {
 		if result.Error != nil {
 			c.JSON(400, gin.H{"status": "error", "message": "Driver not found"})
 			return
-		}
-
-		if(time.Now().Unix() - ride.UpdatedAt.Unix() > 300){
-			ride.RideStatus = "rejected"
-			db.Save(&ride)
 		}
 
 		riderRideDetails := models.RiderRideDetails{}
